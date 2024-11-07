@@ -7,9 +7,11 @@
       <div v-if="!isAnonymous">
         <label for="companyName">企业名称：</label>
         <input type="text" id="companyName" v-model="companyName" placeholder="请输入企业名称" aria-required="true" />
+        <span v-if="errors.companyName" class="error">{{ errors.companyName }}</span>
 
         <label for="email">邮箱：</label>
         <input type="email" id="email" v-model="email" placeholder="name@email.com" aria-required="true" />
+        <span v-if="errors.email" class="error">{{ errors.email }}</span>
 
         <label>规模：</label>
         <div>
@@ -20,6 +22,7 @@
             <input type="radio" value="非上市企业" v-model="companyScale" /> 非上市企业
           </label>
         </div>
+        <span v-if="errors.companyScale" class="error">{{ errors.companyScale }}</span>
       </div>
 
       <div>
@@ -38,6 +41,7 @@
 
       <label for="jobInfo">岗位信息：</label>
       <textarea id="jobInfo" v-model="jobInfo" required aria-required="true"></textarea>
+      <span v-if="errors.jobInfo" class="error">{{ errors.jobInfo }}</span>
 
       <button type="submit">提交</button>
     </form>
@@ -52,7 +56,8 @@ export default {
       email: '',
       companyScale: '',
       isAnonymous: false,
-      jobInfo: ''
+      jobInfo: '',
+      errors: {}
     };
   },
   computed: {
@@ -66,15 +71,42 @@ export default {
     }
   },
   methods: {
+    validateForm() {
+      this.errors = {};
+      let isValid = true;
+
+      if (!this.companyName) {
+        this.errors.companyName = '企业名称不能为空';
+        isValid = false;
+      }
+      if (!this.email) {
+        this.errors.email = '邮箱不能为空';
+      } else if (!/\S+@\S+\.\S+/.test(this.email)) {
+        this.errors.email = '请输入有效的邮箱地址';
+        isValid = false;
+      }
+      if (!this.companyScale) {
+        this.errors.companyScale = '请选取企业规模';
+        isValid = false;
+      }
+      if (!this.jobInfo) {
+        this.errors.jobInfo = '岗位信息不能为空';
+        isValid = false;
+      }
+
+      return isValid;
+    },
     submitJobPost() {
-      // 提交岗位信息逻辑
-      console.log("岗位信息已提交", {
-        companyName: this.companyName,
-        email: this.email,
-        companyScale: this.companyScale,
-        isAnonymous: this.isAnonymous,
-        jobInfo: this.jobInfo
-      });
+      if (this.validateForm()) {
+        // 提交岗位信息逻辑
+        console.log("岗位信息已提交", {
+          companyName: this.companyName,
+          email: this.email,
+          companyScale: this.companyScale,
+          isAnonymous: this.isAnonymous,
+          jobInfo: this.jobInfo
+        });
+      }
     },
     toggleAnonymous() {
       // 切换匿名发布逻辑
@@ -163,5 +195,41 @@ button:hover {
   background-color: #e7f1ff;
   border: 1px solid #007bff;
   border-radius: 5px;
+}
+
+.error {
+  display: block;
+  color: #d9534f;
+  /* 错误颜色 */
+  font-size: 14px;
+  margin-top: 5px;
+  background-color: #f2dede;
+  /* 背景颜色 */
+  border: 1px solid #ebccd1;
+  /* 边框颜色 */
+  border-radius: 4px;
+  /* 圆角 */
+  padding: 10px;
+  /* 内边距 */
+  animation: fade-in 0.3s ease;
+  /* 动画效果 */
+}
+
+/* 动画效果 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* 添加错误提示图标 */
+.error::before {
+  content: "⚠️";
+  /* 感叹号图标 */
+  margin-right: 5px;
 }
 </style>
