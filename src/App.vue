@@ -1,17 +1,21 @@
 <template>
   <div id="app">
-    <h1>Vue 表单验证示例</h1>
-    <FormExample />
+    <h1>Vue 实例</h1>
+    <FatherVue />
   </div>
 </template>
 
 <script>
-import FormExample from './components/FormExample.vue';
+
+// import LearnComponents from './components/LearnComponents.vue';
+import FatherVue from './components/LearnProps/FatherVue.vue'
+// import TableExample from './components/TableExample.vue';
+// import FormExample from './components/FormExample.vue';
 
 export default {
   name: 'App',
   components: {
-    FormExample
+    FatherVue
   }
 };
 </script>
